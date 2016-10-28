@@ -187,6 +187,7 @@ Regards,
             "altitude": /CALIBRATED ALTITUDE[\s]*\n([\d,]+ ft)\n/m,
             "latitude": /LATITUDE[\s]*\n([\d\.-]+)[\s]*\n/m,
             "longitude": /LONGITUDE[\s]*\n([\d\.-]+)[\s]*\n/m,
+            "airline": /Map view \(default\)\n[^\n]+\n[\w ]+\n([\w ]+)\n/m,
         };
 
         var fr24_find_data = function(s, term) {
