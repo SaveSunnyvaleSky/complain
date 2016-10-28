@@ -1,0 +1,3 @@
+Time (include Data as well),City,Neighborhood,Flight No.,Model,From,To,Speed (kt),Altitude (ft),Comment on Noise Level
+10/27/16 10:18,Sunnyvale,De Anza Park,AS3380,E75L ,PDX,SJC,259,6225,"Very noise, disturbing normal activities"
+10/27/16 10:28,Sunnyvale,Sierra Park,UA5083,??,SBP,SFO,304,7074,Somewhat noisy
