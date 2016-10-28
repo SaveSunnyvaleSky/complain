@@ -194,6 +194,9 @@ Regards,
             var re = fr24_rule[term]
             var t = re.exec(s);
             if ( t != null ) {
+                if ( t[1] == "FLIGHT" ) {
+                    return undefined;
+                }
                 return t[1];
             }
             console.log(t)
