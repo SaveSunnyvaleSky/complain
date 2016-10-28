@@ -18,6 +18,7 @@
 
 <body class="col-sm-10">
     <h4>Flight Information: | <small><a href="https://groups.google.com/forum/embed/?place=forum/no-to-skydump">Please join our Google group</a> </small> | <small> <a href="javascript:show_help()">Setting & Help</a> </small> | <small> <a href="javascript:show_data_help()">Data Format</a></small> |
+    <small> <a href="javascript:show_data_collector()">Enter Flight Info</a></small> |
     </h4>
     <form>
         <div class="form-group">
@@ -80,6 +81,129 @@ Regards,
 
         <div class="collapse" id="collapseEmail{{ @index }}">
         <div class="well">
+    </script>
+
+    <script id="data-collector" type="text/x-handlebars-template">
+        <strong>How to collect flight data:</strong>
+        <p>Use <a href="https://www.flightradar24.com/"> flightradar24.com </a>, find the flight, click to view its details. Then select all and copy, paste the data into this box, and click <strong>Generate</strong> </p>
+        <textarea id="enter-flight-data" class="form-control" rows=1>
+ Apps 
+ Add coverage 
+ Data / History 
+ Social 
+ Press 
+ About 
+  Log in
+UTC15:50 
+Search
+ 
+Map view (default)
+© PAUL LINK 
+WN323 /SWA323
+Southwest Airlines
+FLIGHT STATUS 
+SEA
+SEATTLE
+SJC
+SAN JOSE
+SCHEDULED
+DEPARTURE
+07:00
+SCHEDULED
+ARRIVAL
+09:15
+ACTUAL
+DEPARTURE
+07:12
+ESTIMATED
+ARRIVAL
+09:00
+AVERAGE
+FLIGHT TIME
+01:41
+AVERAGE
+DELAY
+00:00
+GREAT CIRCLE DISTANCE: 1,122 KM
+1,143 KM
+01:38 AGO
+22 KM
+IN 00:09
+
+ 
+AIRCRAFT DETAILS 
+TYPE(B737)
+Boeing 737-7H4
+REGISTRATION
+N470WN
+MODE-S CODE
+A5C31B
+SERIAL NUMBER (MSN)
+AGE 
+FLIGHT DETAILS 
+GROUND SPEED
+258 kts
+TRUE AIR SPEED
+N/A
+INDICATED AIR SPEED
+N/A
+MACH
+N/A
+SPEED & ALTITUDE GRAPH
+CALIBRATED ALTITUDE
+5,650 ft
+VERTICAL SPEED
+GPS ALTITUDE
+N/A
+TRACK
+104°
+WIND
+N/A
+TEMPERATURE
+N/A
+FIR / UIR
+RADAR
+T-MLAT2
+SQUAWK
+LATITUDE
+37.1691
+LONGITUDE
+-121.9217
+ You can hide ads on this page in 14
+
+ 
+
+ 
+ AIRCRAFT 56 / 14,545
+ AIRPORT DELAYS 
+AIRPORTDEPARR
+Shanghai(SHA) 5.0 4.3
+Hanoi(HAN) 4.6 2.0
+Mumbai(BOM) 4.4 1.1
+Go to delay map
+TWEETS
+#KL785 about 15 minutes away from landing at @sxmtweets. 📡 Track at https://t...
+1 hour ago
+#AC893, Rome-Montreal, diverting to London due to a medical emergency. https://t.c...
+1 hour ago
+BLOG POSTS
+Flightradar24 Data Regarding Runway Excursion at La Guardia Airport
+11 hours ago
+ 
+   
+
+ 
+
+SWA323
+
+Map data ©2016 Google
+Terms of Use
+Report a map error
+5 km 
+
+ </textarea>
+        <a class="btn btn-primary btn-xs" role="button" href="javascript:report_flight()" style="margin-top:3px;"> Generate</a>
+        <div id="flight-details"> </div>
     </script>
 
     <script type="text/javascript">
@@ -157,6 +281,50 @@ Regards,
                          ''
             })
         };
+
+        var show_data_collector = function() {
+            bootbox.confirm({
+                title: "Enter flight information",
+                message: $("#data-collector").html(),
+                callback: function(c) {
+
+                }
+            });
+
+        };
+
+        var fr24_rule = {
+            "flightno": /Map view \(default\)\n[^\n]+\n([\w]+)/m,
+            "from": /FLIGHT STATUS[\s]*\n([\w]+)\n[^\n]+\n([\w]+)\n/m,
+            "to": /FLIGHT STATUS[\s]*\n[\w]+\n[^\n]+\n([\w]+)\n/m,
+            "model": /AIRCRAFT DETAILS[\s]*\nTYPE\(([\w]+)\)\n/m,
+            "speed": /FLIGHT DETAILS[\s]+\nGROUND SPEED[\s]*\n([\d]+ kts)\n/m,
+            "altitude": /CALIBRATED ALTITUDE[\s]*\n([\d,]+ ft)\n/m,
+            "latitude": /LATITUDE[\s]*\n([\d\.-]+)[\s]*\n/m,
+            "longitude": /LONGITUDE[\s]*\n([\d\.-]+)[\s]*\n/m,
+        };
+
+        var fr24_find_data = function(s, term) {
+            var re = fr24_rule[term]
+            var t = re.exec(s);
+            if ( t != null ) {
+                return t[1];
+            }
+            console.log(t)
+        }
+        var report_flight = function() {
+            var a = {};
+            var info = $("#enter-flight-data").val();
+            var t = ""
+
+            for ( var k in fr24_rule ) {
+                var v = fr24_find_data(info, k);
+                a[k] = v;
+                t += k + ": " + v + "<br>";
+            }
+
+            $("#flight-details").html(t);
+        }
 
         var show_help = function() {
             var bx = bootbox.confirm({
