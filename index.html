@@ -45,6 +45,7 @@ This is a report relating to jets on the NextGen flight paths for {{ Airport }}.
 My Details:
     Name : {{ Name }}
     Address : {{ Address }}
+    Neighborhood: {{ Neighborhood }}
 
 Report Detail:
     {{ Time }}
@@ -56,7 +57,7 @@ Report Detail:
 Regards,
 {{ Name }}
 </textarea>
-<small><span id="template_version">v0.0.8</span><span id="acked">Acknowledged Term: False</span></small>
+<small><span id="template_version">v0.0.9</span><span id="acked">Acknowledged Term: False</span></small>
         </div>
     </form>
     <script id="template-header" type="text/x-handlebars-template">
@@ -98,6 +99,7 @@ Regards,
                         Altitude: r[7],
                         Name: localStorage.Name,
                         Address: localStorage.Address,
+                        Neighborhood: localStorage.Neighborhood
                 };
                 if (["PAO", "SJC", "SFO", "KSQL"].indexOf(a.From) > -1 ) {
                     a.Airport = a.From;
@@ -129,6 +131,8 @@ Regards,
                 '<div class="col-sm-20"><input class="form-control-sm col-sm-4" id="name-input"> </input></div></div>' +
                 '<div class="form-group row row-bottom-margin"><label class="col-sm-1 col-form-label col-form-label-sm"> Address: </label>' +
                 '<div class="col-sm-20"><input class="form-control-sm col-sm-4" id="address-input"> </input></div></div>' +
+                '<div class="form-group row row-bottom-margin"><label class="col-sm-1 col-form-label col-form-label-sm"> Neighborhood: </label>' +
+                '<div class="col-sm-20"><input class="form-control-sm col-sm-4" id="neighborhood-input"> </input></div></div>' +
                 '</form></div>' +
                 '</li>'+
                 '<li>Update template text for you, you should update text to reflect your option. The default template is a generic template.</li>' +
@@ -141,12 +145,13 @@ Regards,
                         localStorage.help_showed = false;
                         show_help();
                     } else {
-                        if ( $("#name-input").val() == "" || $("#address-input").val() == "" ) {
+                        if ( $("#name-input").val() == "" || $("#address-input").val() == "" || $("#neighborhood-input").val() == "" ) {
                             localStorage.help_showed = false;
                             show_help();
                         } else {
                             localStorage.Name = $("#name-input").val();
                             localStorage.Address = $("#address-input").val();
+                            localStorage.Neighborhood = $("#neighborhood-input").val();
                             localStorage.help_showed = true;
                             $("#acked").html("Acknowledged Term: true");
                             load();
