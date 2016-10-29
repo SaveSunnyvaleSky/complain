@@ -86,15 +86,141 @@ Regards,
     <script id="data-collector" type="text/x-handlebars-template">
         <strong>How to collect flight data:</strong>
         <p>Use <a href="https://www.flightradar24.com/"> flightradar24.com </a>, find the flight, click to view its details. Then select all and copy, paste the data into this box, and click <strong>Generate</strong> </p>
-        <textarea id="enter-flight-data" class="form-control" rows=1> Paste data here. </textarea>
+        <textarea id="enter-flight-data" class="form-control" rows=1>
+
+ Apps 
+ Add coverage 
+ Data / History 
+ Social 
+ Press 
+ About 
+  Log in
+UTC15:09 
+Search
+ 
+Map view (default)
+© Huy Do 
+AS200 /ASA200
+Alaska Airlines
+FLIGHT STATUS 
+SEA
+SEATTLE
+SJC
+SAN JOSE
+SCHEDULED
+DEPARTURE
+06:00
+SCHEDULED
+ARRIVAL
+08:05
+ACTUAL
+DEPARTURE
+06:21
+ESTIMATED
+ARRIVAL
+08:17
+AVERAGE
+FLIGHT TIME
+01:46
+AVERAGE
+DELAY
+00:00
+GREAT CIRCLE DISTANCE: 1,122 KM
+1,121 KM
+01:47 AGO
+11 KM
+IN 00:07
+
+ 
+AIRCRAFT DETAILS 
+TYPE(B739)
+Boeing 737-990(ER)
+REGISTRATION
+N433AS
+MODE-S CODE
+A52E54
+SERIAL NUMBER (MSN)
+AGE 
+FLIGHT DETAILS 
+GROUND SPEED
+219 kts
+TRUE AIR SPEED
+N/A
+INDICATED AIR SPEED
+N/A
+MACH
+N/A
+SPEED & ALTITUDE GRAPH
+CALIBRATED ALTITUDE
+3,100 ft
+VERTICAL SPEED
+GPS ALTITUDE
+TRACK
+327°
+WIND
+N/A
+TEMPERATURE
+N/A
+FIR / UIR
+RADAR
+F-KVCB1
+SQUAWK
+LATITUDE
+37.3699
+LONGITUDE
+-122.0476
+ You can hide ads on this page in 14
+
+ 
+
+ 
+ AIRCRAFT 10 / 13,361
+ AIRPORT DELAYS 
+AIRPORTDEPARR
+Moscow(SVO) 2.5 0.8
+Rome(FCO) 2.9 0.4
+Manila(MNL) 2.1 1.2
+Go to delay map
+TWEETS
+New schedules means new callsigns which means that route matching on Flightradar24...
+7 hours ago
+This weekend marks the end of DST (Daylight Saving Time) in some countries. It als...
+7 hours ago
+BLOG POSTS
+Flightradar24 Data Regarding Runway Excursion at La Guardia Airport
+1 day ago
+See Flights in All New Ways on Flightradar24
+2 days ago
+ 
+  
+
+
+ASA200
+
+Map data ©2016 Google
+Terms of Use
+Report a map error
+2 km 
+
+        </textarea>
         <a class="btn btn-primary btn-xs" role="button" href="javascript:report_flight()" style="margin-top:3px;"> Generate</a>
         <div id="flight-details"> </div>
     </script>
 
+    <script id="tmpl-flight-detail" type="text/x-handlebars-template">
+        <div class="container"><form>
+            {{#each flightinfo }}
+            <div class="form-group row row-bottom-margin"><label class="col-sm-1 col-form-label col-form-label-sm"> {{ Key }} </label>
+            <input class="form-control-sm col-sm-4" id="kv-{{ Key }}" value="{{ Value }}"></input></div>
+            {{/each}}
+        </div>
+    </script>
+
+
     <script type="text/javascript">
         var parseLog = function (l) {
             var re = /^([A-Z][a-z]+ [0-9]+, [\d]+:[\d]+:[\d]+) ([ \w]+) \(([A-Z]+):([A-Z]+) ([\w]+) ([\d]+k), ([\d]+ft)\)/g
-            var re_excel = /^([^\t]+)\t([^\t]+)\t([^\t]+)\t([^\t]+)\t([^\t]+)\t([^\t]+)\t([^\t]+)\t([^\t]+)\t([^\t]+)\t([^\t]+)/g
+            var re_excel = /^([^\t]+)\t([^\t]*)\t([^\t]*)\t([^\t]+)\t([^\t]+)\t([^\t]+)\t([^\t]+)\t([^\t]+)\t([^\t]+)\t([^\t]*)/g
 
             var r = re_excel.exec(l);
             if(r != null) {
@@ -171,8 +297,33 @@ Regards,
             bootbox.confirm({
                 title: "Enter flight information",
                 message: $("#data-collector").html(),
+                buttons: {
+                    confirm: {
+                        label: 'Add To My Flight List',
+                        className: 'btn-success'
+                    },
+                },
                 callback: function(c) {
+                    if ( c ) {
+                        // append to the list
+                        var v = $("#flightlist").val();
+                        var l = "\n";
+                        if (v[v.length-1] == "\n") l = "";
 
+                        // Time (include Data as well)	City	Neighborhood	Flight No.	Model	From	To	Speed (kt)	Altitude (ft)	Comment on Noise Level
+                        var fd = [$("#kv-time").val(), localStorage.City,
+                            $("#kv-neighborhood").val(),
+                            $("#kv-flightno").val(),
+                            $("#kv-model").val(),
+                            $("#kv-from").val(),
+                            $("#kv-to").val(),
+                            $("#kv-speed").val(),
+                            $("#kv-altitude").val(),
+                            $("#kv-comment").val(),
+                            ];
+
+                        $("#flightlist").val(v + l + fd.join("\t"));
+                    }
                 }
             });
 
@@ -202,17 +353,42 @@ Regards,
             console.log(t)
         }
         var report_flight = function() {
+            var b = {
+                "flightinfo": [],
+            };
             var a = {};
             var info = $("#enter-flight-data").val();
             var t = ""
+            var now = new Date();
+
+            b.flightinfo.push({
+                "Key": "time",
+                "Value": now.toString(),
+            });
+            b.flightinfo.push({
+                "Key": "neighborhood",
+                "Value": localStorage.Neighborhood,
+            });
 
             for ( var k in fr24_rule ) {
                 var v = fr24_find_data(info, k);
                 a[k] = v;
-                t += k + ": " + v + "<br>";
+                b.flightinfo.push({
+                    "Key": k,
+                    "Value": v
+                });
             }
+            b.flightinfo.push({
+                "Key": "comment",
+                "Value": ""
+            });
 
-            $("#flight-details").html(t);
+
+            var tmplFlight = $("#tmpl-flight-detail").html();
+            var theTemplate = Handlebars.compile(tmplFlight);
+            var theCompiledHtml = theTemplate(b);
+
+            $("#flight-details").html(theCompiledHtml);
         }
 
         var show_help = function() {
