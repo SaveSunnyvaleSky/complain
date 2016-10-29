@@ -307,11 +307,15 @@ Regards,
                 callback: function(r) {
                     if ( r == false ) {
                         localStorage.help_showed = false;
+                        console.log("show help 1");
                         show_help();
+                        bootbox.alert("You must enter name, address, and neighborhood<br>All information is stored locally");
                     } else {
                         if ( $("#name-input").val() == "" || $("#address-input").val() == "" || $("#neighborhood-input").val() == "" ) {
                             localStorage.help_showed = false;
+                            console.log("show help 2");
                             show_help();
+                            bootbox.alert("You must enter name, address, and neighborhood<br>All information is stored locally");
                         } else {
                             localStorage.Name = $("#name-input").val();
                             localStorage.Address = $("#address-input").val();
@@ -371,16 +375,18 @@ Regards,
                 defaultTemplate = $("#template").val();
             }
             if ( localStorage.help_showed === "false" || typeof localStorage.Address == "undefined" || typeof localStorage.Name == "undefined" ) {
+                console.log("show help 3");
                 show_help();
                 return;
             } else {
                 $("#acked").html(" | Acknowledged Term: <b>true</b>");
             }
-            if (localStorage.template_version != $("#template_version").html()) {
+            if (typeof localStorage.template_version != "undefined" && localStorage.template_version != $("#template_version").html()) {
                 // reset template
                 save();
                 localStorage.help_showed = false;
                 $("#acked").html(" | Acknowledged Term: <b>false</b>");
+                console.log("show help 4");
                 show_help();
                 return;
             }
