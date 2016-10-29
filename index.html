@@ -221,7 +221,8 @@ Regards,
         };
 
         var fr24_rule = {
-            "flightno": /Map view \(default\)\n[^\n]+\n([\w]+)/m,
+            "flightno_f": /Map view \(default\)\n[^\n]+\n([\w]+)/m,
+            "flightno_m": /Toggle navigation\nUTC[^\n]+\nSearch\n[^\n]+\n([\w]+)/m,
             "from": /FLIGHT STATUS[\s]*\n([\w]+)\n/m,
             "to": /FLIGHT STATUS[\s]*\n[\w]+\n[^\n]+\n([\w]+)\n/m,
             "model": /AIRCRAFT DETAILS[\s]*\nTYPE\(([\w]+)\)\n/m,
@@ -229,7 +230,8 @@ Regards,
             "altitude": /CALIBRATED ALTITUDE[\s]*\n([\d,]+ ft)\n/m,
             "latitude": /LATITUDE[\s]*\n([\d\.-]+)[\s]*\n/m,
             "longitude": /LONGITUDE[\s]*\n([\d\.-]+)[\s]*\n/m,
-            "airline": /Map view \(default\)\n[^\n]+\n[\w ]+[^\n]*\n([\w ]+)\n/m,
+            "airline_f": /Map view \(default\)\n[^\n]+\n[\w ]+[^\n]*\n([\w ]+)\nFLIGHT STATUS/m,
+            "airline_m": /Toggle navigation\nUTC[^\n]+\nSearch\n[^\n]+\n[^\n]+\n([\w ]+)\nFLIGHT STATUS/m,
         };
 
         var fr24_find_data = function(s, term) {
@@ -263,11 +265,21 @@ Regards,
 
             for ( var k in fr24_rule ) {
                 var v = fr24_find_data(info, k);
-                a[k] = v;
-                b.flightinfo.push({
-                    "Key": k,
-                    "Value": v
-                });
+
+                if ( ( k.indexOf("_m") > -1 || k.indexOf("_f") > -1) && typeof v !== "undefined" ) {
+                    console.log("found value for " + k + " | " + k.slice(0, -2));
+                    b.flightinfo.push({
+                        "Key": k.slice(0,-2),
+                        "Value": v
+                    });
+                    a[k.slice(0, -2)] = v;
+                } else if ( ! (k.indexOf("_m") > -1 || k.indexOf("_f") > -1)) {
+                    b.flightinfo.push({
+                        "Key": k,
+                        "Value": v
+                    });
+                    a[k] = v;
+                }
             }
             b.flightinfo.push({
                 "Key": "comment",
