@@ -133,6 +133,13 @@ Regards,
                 } else {
                     a.Airport = a.FlightNo;
                 }
+
+                if ( a.Speed.indexOf("kt") === -1 ) {
+                    a.Speed = a.Speed + " kts";
+                }
+                if ( a.Altitude.indexOf("ft") === -1 ) {
+                    a.Altitude = a.Altitude + " ft";
+                }
                 return a;
             }
 
