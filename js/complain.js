@@ -30,9 +30,9 @@ var parseLog = function (l) {
         if (r[10] != "") {
             a.Comment = "Comment: " + r[10] + "\n";
         }
-        if (["PAO", "SJC", "SFO", "KSQL"].indexOf(a.From) > -1) {
+        if (["PAO", "SJC", "SFO", "KSQL", "SQL"].indexOf(a.From) > -1) {
             a.Airport = a.From;
-        } else if (["PAO", "SJC", "SFO", "KSQL"].indexOf(a.To) > -1) {
+        } else if (["PAO", "SJC", "SFO", "KSQL", "SQL"].indexOf(a.To) > -1) {
             a.Airport = a.To;
         } else {
             a.Airport = a.FlightNo;
@@ -256,21 +256,21 @@ var show_help = function () {
         if (localStorage.Address) $("#address-input").val(localStorage.Address);
         if (localStorage.Neighborhood) $("#neighborhood-input").val(localStorage.Neighborhood);
     });
-}
+};
 
 var open_complaint_link = function (airport, index) {
     if (airport == "SJC") {
         window.open("https://goo.gl/wgCzmn", "_blank");
     } else if (airport == "SFO") {
         window.open("http://www.flysfo.com/community/noise-abatement/file-a-complaint", "_blank");
-    } else if (airport == "KSQL") {
+    } else if (airport == "KSQL" || airport == "SQL") {
         window.open("https://goo.gl/o7uYkF", "_blank");
     } else {
         bootbox.Alarm("Unknown Airport Code [" + airport + "], <br>Please file manually.");
     }
     $("#complaint_link_" + index).removeClass("btn-primary");
     $("#complaint_link_" + index).addClass("btn-default");
-}
+};
 
 
 var email_faa = function (email, index, flight, airport) {
