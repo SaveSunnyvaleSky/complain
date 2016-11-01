@@ -1,0 +1,107 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flat-ui/2.3.0/css/flat-ui.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.13/clipboard.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"> </script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+    <style type="text/css">
+        .row-bottom-margin { margin-bottom:0px; }
+    </style>
+</head>
+
+<body class="col-sm-10">
+    <h4>Flight Information: | <small><a href="https://groups.google.com/forum/embed/?place=forum/no-to-skydump">Please join our Google group</a> </small> | <small> <a href="javascript:show_help()">Setting & Help</a> </small> | <small> <a href="javascript:show_data_help()">Data Format</a></small> |
+    <small> <a href="javascript:show_data_collector()">Enter Flight Info</a></small> |
+    </h4>
+    <form>
+        <div class="form-group">
+            <label for="exampleTextarea">Flight Details (<u>copy paste your report list here</u>):</label>
+            <textarea class="form-control" id="flightlist" rows="5">
+Paste your report list here:
+</textarea>
+    <button class="btn btn-primary btn-xs" type="button" onclick="load();">
+        Generate Complaints
+    </button>
+    <br><div class="content-placeholder" id="emails"> Email goes here </div>
+    <br><h4>Template:</h4>
+    <button class="btn btn-primary btn-xs" type="button" onclick="save();">
+        Save Template
+    </button>
+    <button class="btn btn-primary btn-xs" type="button" onclick="reset();">
+        Reset Template
+    </button>
+    <br>
+    <textarea class="form-control" id="template" rows="20">
+Subject: Airplane Noise Report (Airport: {{ Airport }}, Flight No: {{ FlightNo }})
+
+This is a report relating to jets on the NextGen flight paths for {{ Airport }}. Where possible, the aircraft was identified via flightradar24.com.
+
+My Details:
+    Name : {{ Name }}
+    Address : {{ Address }}
+    Neighborhood: {{ Neighborhood }}
+    {{ Comment }}
+Report Detail:
+    {{ Time }}
+    Flight: {{ FlightNo }} {{ From }}:{{ To }}
+    Model: {{ Model }}
+    Speed: {{ Speed }}
+    Altitude: {{ Altitude }}
+
+Regards,
+{{ Name }}
+</textarea>
+<small><span id="template_version">v0.0.9</span><span id="acked">Acknowledged Term: False</span></small>
+        </div>
+    </form>
+    <script id="template-header" type="text/x-handlebars-template">
+        <div>Complaint for <strong>{{ FlightNo }}</strong>:  {{ From }} --> {{ To}}   <small>@ {{ Time }}</small> </div>
+        <a class="btn btn-primary btn-xs" role="button" data-toggle="collapse" href="#collapseEmail{{ @index }}" aria-expanded="false" aria-controls="collapseEmail{{ @index }}">
+        Preview Complaint
+        </a>
+        <a class="btn btn-primary btn-xs" id="gmail_link_{{ @index }}" role="button" href="javascript:email_faa('gmail', {{ @index }}, '{{ FlightNo }}', '{{ Airport }}')" target="_blank">
+        Email FAA via Gmail
+        </a>
+        <a class="btn btn-primary btn-xs" id="email_link_{{ @index }}" role="button" href="javascript:email_faa('', {{ @index }}, '{{ FlightNo }}', '{{ Airport }}')" target="_blank">
+        Email FAA via Local Email Client
+        </a>
+        <a class="btn btn-primary btn-xs" id="complaint_link_{{ @index }}"  data-clipboard-target="#email{{ @index }}" role="button" href="javascript:open_complaint_link('{{ Airport }}', '{{ @index }}')">
+        File Complaint with {{ Airport }}
+        </a>
+        <button class="btn btn-primary btn-xs" type="button" data-clipboard-target="#email{{ @index }}" onclick="javascript:$('#copied_{{@index}}').html('copied!')">
+        Copy to Clipboard
+        </button> <small id="copied_{{@index}}"></small>
+
+        <div class="collapse" id="collapseEmail{{ @index }}">
+        <div class="well">
+    </script>
+
+    <script id="data-collector" type="text/x-handlebars-template">
+        <strong>How to collect flight data:</strong>
+        <p>Use <a href="https://www.flightradar24.com/"> flightradar24.com </a>, find the flight, click to view its details. Then select all and copy, paste the data into this box, and click <strong>Generate</strong> </p>
+        <textarea id="enter-flight-data" class="form-control" rows=1>
+        </textarea>
+        <a class="btn btn-primary btn-xs" role="button" href="javascript:report_flight()" style="margin-top:3px;"> Generate</a>
+        <div id="flight-details"> </div>
+    </script>
+
+    <script id="tmpl-flight-detail" type="text/x-handlebars-template">
+        <div class="container"><form>
+            {{#each flightinfo }}
+            <div class="form-group row row-bottom-margin"><label class="col-sm-1 col-form-label col-form-label-sm"> {{ Key }} </label>
+            <input class="form-control-sm col-sm-4" id="kv-{{ Key }}" value="{{ Value }}"></input></div>
+            {{/each}}
+        </div>
+    </script>
+
+
+    <script src="./js/complain.js" >    </script>
+</body>
+</html>
