@@ -227,8 +227,11 @@ var show_help = function () {
         callback: function (r) {
             if (r == false) {
                 localStorage.help_showed = false;
-                show_help();
-                bootbox.alert("You must enter name, address, and neighborhood<br>All information is stored locally");
+
+                setTimeout(function() {
+                    show_help();
+                    bootbox.alert("You must enter all the information and accept the term of service!<br>All information is stored locally"); 
+                }, 500);
             } else {
                 if ($("#name-input").val() == "" || $("#address-input").val() == "" || $("#neighborhood-input").val() == "") {
                     localStorage.help_showed = false;
@@ -247,6 +250,8 @@ var show_help = function () {
     });
     bx.init(function () {
         // set value
+        console.log("init help box");
+
         if (localStorage.Name) $("#name-input").val(localStorage.Name);
         if (localStorage.Address) $("#address-input").val(localStorage.Address);
         if (localStorage.Neighborhood) $("#neighborhood-input").val(localStorage.Neighborhood);
@@ -350,14 +355,14 @@ var reset = function () {
     load();
 };
 
-$(function () {
+var init = function () {
     load();
     new Clipboard(".btn", {
         text: function (trigger) {
             return $(trigger.getAttribute("data-clipboard-target")).html();
         }
     });
-});
+};
 
 
 // dateformat

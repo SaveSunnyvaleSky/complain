@@ -102,6 +102,16 @@ Regards,
     </script>
 
 
-    <script src="./js/complain.js" >    </script>
+    <!--<script src="./js/complain.js" >    </script>-->
+    <script>
+        var script = document.createElement('script');
+        script.src = "./js/complain.js";
+        script.onload = function() {
+            console.log("loaded");
+            init();
+        }
+
+        document.body.appendChild(script);
+    </script>
 </body>
 </html>
