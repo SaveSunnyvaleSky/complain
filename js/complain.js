@@ -165,7 +165,7 @@ var report_flight = function () {
 
     b.flightinfo.push({
         "Key": "time",
-        "Value": now.format("mm/dd/yy HH:MM:ss"),
+        "Value": now.format("mm/dd/yy HH:MM"),
     });
     b.flightinfo.push({
         "Key": "neighborhood",
