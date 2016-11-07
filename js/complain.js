@@ -16,8 +16,8 @@ var parseLog = function (l) {
         var a = {
             Time: r[1],
             FlightNo: r[4],
-            From: r[6],
-            To: r[7],
+            From: r[6].replace(/ /g,""),
+            To: r[7].replace(/ /g,""),
             Model: r[5],
             Speed: r[8],
             Airport: null,
