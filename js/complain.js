@@ -52,8 +52,8 @@ var parseLog = function (l) {
         a = {
             Time: r[1],
             FlightNo: r[2],
-            From: r[3],
-            To: r[4],
+            From: r[3].replace(/ /g,""),
+            To: r[4].replace(/ /g,""),
             Model: r[5],
             Speed: r[6],
             Airport: null,
@@ -67,7 +67,7 @@ var parseLog = function (l) {
         } else if (["PAO", "SJC", "SFO", "KSQL"].indexOf(a.To) > -1) {
             a.Airport = a.To;
         } else {
-            a.Airport = a.FlightNo;
+            a.Airport = "N/A";
         }
         return a;
     }
