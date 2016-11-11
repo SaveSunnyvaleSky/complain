@@ -21,6 +21,7 @@
     | <small><a href="https://tinyurl.com/sunnyvalesky"  target="_blank">Flight Tracking Document</a> </small> 
     | <small> <a href="javascript:show_help()">Setting & Help</a> </small> | <small> <a href="javascript:show_data_help()">Data Format</a></small> |
     <small> <a href="javascript:show_data_collector()">Enter Flight Info</a></small> |
+    <small> <a href="http://bit.ly/2frsfo9">Help/FAQ</a></small> |
     </h4>
     <form>
         <div class="form-group">
@@ -107,7 +108,7 @@ Regards,
     <!--<script src="./js/complain.js" >    </script>-->
     <script>
         var script = document.createElement('script');
-        script.src = "./js/complain.js?t=12234324243";
+        script.src = "./js/complain.js?t=" + Math.floor(Math.random() * 100000000000);
         script.onload = function() {
             console.log("loaded");
             init();
