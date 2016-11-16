@@ -9,26 +9,28 @@
 */
 var parseLog = function (l) {
     var re = /^([A-Z][a-z]+ [0-9]+, [\d]+:[\d]+:[\d]+) ([ \w]+) \(([A-Z]+):([A-Z]+) ([\w]+) ([\d]+k), ([\d]+ft)\)/g
-    var re_excel = /^([^\t]+)\t([^\t]*)\t([^\t]*)\t([^\t]+)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]+)[\t]*([^\t]*)/g
+    // var re_excel = /^([^\t]+)\t([^\t]*)\t([^\t]*)\t([^\t]+)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]+)[\t]*([^\t]*)/g
+    var re_excel = /^([^\t]+)\t([^\t]+)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]+)[\t]*([^\t]*)\t([^\t]*)\t([^\t]*)/g
 
     var r = re_excel.exec(l);
     if (r != null) {
+        // this from google sheet or excel
         var a = {
             Time: r[1],
-            FlightNo: r[4],
-            From: r[6].replace(/ /g,""),
-            To: r[7].replace(/ /g,""),
-            Model: r[5],
-            Speed: r[8],
+            FlightNo: r[2],
+            From: r[4].replace(/ /g,""),
+            To: r[5].replace(/ /g,""),
+            Model: r[3],
+            Speed: r[6],
             Airport: null,
-            Altitude: r[9],
-            City: r[2],
+            Altitude: r[7],
+            City: r[9],
             Name: localStorage.Name,
             Address: localStorage.Address,
-            Neighborhood: r[3],
+            Neighborhood: r[10],
         };
         if (r[10] != "") {
-            a.Comment = "Comment: " + r[10] + "\n";
+            a.Comment = "Comment: " + r[8] + "\n";
         }
         if (["PAO", "SJC", "SFO", "KSQL", "SQL"].indexOf(a.From) > -1) {
             a.Airport = a.From;
@@ -106,8 +108,7 @@ var show_data_collector = function () {
                 if (v[v.length - 1] == "\n") l = "";
 
                 // Time (include Data as well)	City	Neighborhood	Flight No.	Model	From	To	Speed (kt)	Altitude (ft)	Comment on Noise Level
-                var fd = [$("#kv-time").val(), localStorage.City,
-                    $("#kv-neighborhood").val(),
+                var fd = [$("#kv-time").val(), 
                     $("#kv-flightno").val(),
                     $("#kv-model").val(),
                     $("#kv-from").val(),
@@ -115,6 +116,8 @@ var show_data_collector = function () {
                     $("#kv-speed").val(),
                     $("#kv-altitude").val(),
                     $("#kv-comment").val(),
+                    localStorage.City,
+                    $("#kv-neighborhood").val(),
                 ];
 
                 var ss = fd.slice(1).join("\t");

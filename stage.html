@@ -21,6 +21,7 @@
     | <small><a href="https://tinyurl.com/sunnyvalesky"  target="_blank">Flight Tracking Document</a> </small> 
     | <small> <a href="javascript:show_help()">Setting & Help</a> </small> | <small> <a href="javascript:show_data_help()">Data Format</a></small> |
     <small> <a href="javascript:show_data_collector()">Enter Flight Info</a></small> |
+    <small> <a href="http://bit.ly/2frsfo9">Help/FAQ</a></small> |
     </h4>
     <form>
         <div class="form-group">
@@ -48,7 +49,7 @@ This is a report relating to jets on the NextGen flight paths for {{ Airport }}.
 My Details:
     Name : {{ Name }}
     Address : {{ Address }}
-    Neighborhood: {{ Neighborhood }}
+    Neighborhood: {{ Neighborhood }} in the city of {{ City }}
     {{ Comment }}
 Report Detail:
     {{ Time }}
@@ -87,7 +88,7 @@ Regards,
 
     <script id="data-collector" type="text/x-handlebars-template">
         <strong>How to collect flight data:</strong>
-        <p>Use <a href="https://www.flightradar24.com/"> flightradar24.com </a>, find the flight, click to view its details. Then select all and copy, paste the data into this box, and click <strong>Generate</strong> </p>
+        <p>Use <a href="https://www.flightradar24.com/" target="_blank"> flightradar24.com </a>, find the flight, click to view its details. Then select all and copy, paste the data into this box, and click <strong>Generate</strong> </p>
         <textarea id="enter-flight-data" class="form-control" rows=1>
         </textarea>
         <a class="btn btn-primary btn-xs" role="button" href="javascript:report_flight()" style="margin-top:3px;"> Generate</a>
@@ -107,7 +108,7 @@ Regards,
     <!--<script src="./js/complain.js" >    </script>-->
     <script>
         var script = document.createElement('script');
-        script.src = "./js/complain.js";
+        script.src = "./js/complain.js?t=" + Math.floor(Math.random() * 100000000000);
         script.onload = function() {
             console.log("loaded");
             init();
