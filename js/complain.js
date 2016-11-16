@@ -218,6 +218,8 @@ var show_help = function () {
             '<div class="col-sm-20"><input class="form-control-sm col-sm-4" id="name-input"></input></div></div>' +
             '<div class="form-group row row-bottom-margin"><label class="col-sm-1 col-form-label col-form-label-sm"> Address: </label>' +
             '<div class="col-sm-20"><input class="form-control-sm col-sm-4" id="address-input"> </input></div></div>' +
+            '<div class="form-group row row-bottom-margin"><label class="col-sm-1 col-form-label col-form-label-sm"> City: </label>' +
+            '<div class="col-sm-20"><input class="form-control-sm col-sm-4" id="city-input"> </input></div></div>' +
             '<div class="form-group row row-bottom-margin"><label class="col-sm-1 col-form-label col-form-label-sm"> <small>Neighborhood:</small> </label>' +
             '<div class="col-sm-20"><input class="form-control-sm col-sm-4" id="neighborhood-input"> </input></div></div>' +
             '</form></div>' +
@@ -236,13 +238,14 @@ var show_help = function () {
                     bootbox.alert("You must enter all the information and accept the term of service!<br>All information is stored locally"); 
                 }, 500);
             } else {
-                if ($("#name-input").val() == "" || $("#address-input").val() == "" || $("#neighborhood-input").val() == "") {
+                if ($("#name-input").val() == "" || $("#address-input").val() == "" || $("#city-input").val() == "" || $("#neighborhood-input").val() == "") {
                     localStorage.help_showed = false;
                     show_help();
-                    bootbox.alert("You must enter name, address, and neighborhood<br>All information is stored locally");
+                    bootbox.alert("You must enter name, address, city, and neighborhood<br>All information is stored locally");
                 } else {
                     localStorage.Name = $("#name-input").val();
                     localStorage.Address = $("#address-input").val();
+                    localStorage.City = $("#city-input").val();
                     localStorage.Neighborhood = $("#neighborhood-input").val();
                     localStorage.help_showed = true;
                     $("#acked").html("Acknowledged Term: true");
