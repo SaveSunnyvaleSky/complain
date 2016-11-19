@@ -212,14 +212,14 @@ var show_help = function () {
             '<p>This page help your parsing list of flight information, and generate email based on template.</p>' +
             '<strong> What need I do?</strong>' +
             '<ol>' +
-            '<li>Update template with your accurate information. All information is stored locally in your browser. <b>Your name and address must be correct to get your report processed</b>' +
+            '<li>Update template with your accurate information. All information is stored locally in your browser. <b>Your name and address must be correct to get your report processed. Full Address should include street#, street, city, state, zipcode; and the City below is used for the email topic. </b>' +
             '<div class="container"><form>' +
             '<div class="form-group row row-bottom-margin"><label class="col-sm-1 col-form-label col-form-label-sm"> Name: </label>' +
             '<div class="col-sm-20"><input class="form-control-sm col-sm-4" id="name-input"></input></div></div>' +
-            '<div class="form-group row row-bottom-margin"><label class="col-sm-1 col-form-label col-form-label-sm"> Address: </label>' +
+            '<div class="form-group row row-bottom-margin"><label class="col-sm-1 col-form-label col-form-label-sm"> Full Address (street,city,state,zip) : </label>' +
             '<div class="col-sm-20"><input class="form-control-sm col-sm-4" id="address-input"> </input></div></div>' +
             '<div class="form-group row row-bottom-margin"><label class="col-sm-1 col-form-label col-form-label-sm"> City: </label>' +
-            '<div class="col-sm-20"><input class="form-control-sm col-sm-4" id="city-input"> </input></div></div>' +
+                '<div class="col-sm-20"><input class="form-control-sm col-sm-4" id="city-input"> </input></div></div>' +
             '<div class="form-group row row-bottom-margin"><label class="col-sm-1 col-form-label col-form-label-sm"> <small>Neighborhood:</small> </label>' +
             '<div class="col-sm-20"><input class="form-control-sm col-sm-4" id="neighborhood-input"> </input></div></div>' +
             '</form></div>' +
