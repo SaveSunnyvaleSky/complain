@@ -299,6 +299,7 @@ var show_help = function () {
 
         if (localStorage.Name) $("#name-input").val(localStorage.Name);
         if (localStorage.Address) $("#address-input").val(localStorage.Address);
+        if (localStorage.City) $("#city-input").val(localStorage.City);
         if (localStorage.Neighborhood) $("#neighborhood-input").val(localStorage.Neighborhood);
     });
 };
