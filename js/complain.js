@@ -126,7 +126,6 @@ var show_data_collector = function () {
                 } else {
                     bootbox.alert("This flight " + $("#kv-flightno").val() + " added!")
                 }
-
             }
         }
     });
@@ -141,10 +140,10 @@ var fr24_rule = {
     "model": /AIRCRAFT DETAILS[\s]*\nTYPE\(([\w]+)\)\n/m,
     "speed": /FLIGHT DETAILS[\s]+\nGROUND SPEED[\s]*\n([\d]+) kts\n/m,
     "altitude": /CALIBRATED ALTITUDE[\s]*\n([\d,]+) ft\n/m,
-    "latitude": /LATITUDE[\s]*\n([\d\.-]+)[\s]*\n/m,
-    "longitude": /LONGITUDE[\s]*\n([\d\.-]+)[\s]*\n/m,
-    "airline_f": /Map view \(default\)\n[^\n]+\n[\w ]+[^\n]*\n([\w ]+)\nFLIGHT STATUS/m,
-    "airline_m": /Toggle navigation\nUTC[^\n]+\nSearch\n[^\n]+\n[^\n]+\n([\w ]+)\nFLIGHT STATUS/m,
+    // "latitude": /LATITUDE[\s]*\n([\d\.-]+)[\s]*\n/m,
+    // "longitude": /LONGITUDE[\s]*\n([\d\.-]+)[\s]*\n/m,
+    // "airline_f": /Map view \(default\)\n[^\n]+\n[\w ]+[^\n]*\n([\w ]+)\nFLIGHT STATUS/m,
+    // "airline_m": /Toggle navigation\nUTC[^\n]+\nSearch\n[^\n]+\n[^\n]+\n([\w ]+)\nFLIGHT STATUS/m,
 };
 
 var fr24_find_data = function (s, term) {
@@ -164,45 +163,85 @@ var report_flight = function () {
     };
     var a = {};
     var info = $("#enter-flight-data").val();
-    var now = new Date();
+
+    var re = report_flight_webtrack(info);
+    if ( re ) {
+        b.flightinfo = re;
+    } else {
+        // not webtrack
+        var now = new Date();
+
+        b.flightinfo.push({
+            "Key": "time",
+            "Value": now.format("mm/dd/yy HH:MM"),
+        });
+
+        for (var k in fr24_rule) {
+            var v = fr24_find_data(info, k);
+
+            if ((k.indexOf("_m") > -1 || k.indexOf("_f") > -1) && typeof v !== "undefined") {
+                b.flightinfo.push({
+                    "Key": k.slice(0, -2),
+                    "Value": v
+                });
+                a[k.slice(0, -2)] = v;
+            } else if (!(k.indexOf("_m") > -1 || k.indexOf("_f") > -1)) {
+                b.flightinfo.push({
+                    "Key": k,
+                    "Value": v
+                });
+                a[k] = v;
+            }
+        }
+    }
 
     b.flightinfo.push({
-        "Key": "time",
-        "Value": now.format("mm/dd/yy HH:MM"),
+        "Key": "comment",
+        "Value": ""
     });
     b.flightinfo.push({
         "Key": "neighborhood",
         "Value": localStorage.Neighborhood,
     });
 
-    for (var k in fr24_rule) {
-        var v = fr24_find_data(info, k);
-
-        if ((k.indexOf("_m") > -1 || k.indexOf("_f") > -1) && typeof v !== "undefined") {
-            b.flightinfo.push({
-                "Key": k.slice(0, -2),
-                "Value": v
-            });
-            a[k.slice(0, -2)] = v;
-        } else if (!(k.indexOf("_m") > -1 || k.indexOf("_f") > -1)) {
-            b.flightinfo.push({
-                "Key": k,
-                "Value": v
-            });
-            a[k] = v;
-        }
-    }
-    b.flightinfo.push({
-        "Key": "comment",
-        "Value": ""
-    });
-
-
     var tmplFlight = $("#tmpl-flight-detail").html();
     var theTemplate = Handlebars.compile(tmplFlight);
     var theCompiledHtml = theTemplate(b);
 
     $("#flight-details").html(theCompiledHtml);
+};
+
+var report_flight_webtrack = function(t) {
+    /*
+        Leaflet
+        Nov 18 2016                 0
+        10:16:10 AM                 1
+        EJA770                      2
+        Flight Id: EJA770           3
+        Aircraft Type: CL35         4
+        Origin: SFO                 5
+        Destination: SBP            6
+        Altitude: 19,100 ft         7
+        Tail Number: N770QS         9
+    */
+
+    var l = t.split("Leaflet\n");
+
+    if ( l.length <= 1) {
+        return undefined;
+    }
+
+    var f = l[1].split("\n");
+    var a = [];
+    a.push({"Key": "time"     , "Value": f[0] + " " + f[1]});
+    a.push({"Key": "flightno" , "Value": f[2]});
+    a.push({"Key": "speed" , "Value": "?"});
+    a.push({"Key": "model"    , "Value": f[4].split(":")[1]});
+    a.push({"Key": "from"     , "Value": f[5].split(" ")[1]});
+    a.push({"Key": "to"       , "Value": f[6].split(" ")[1]});
+    a.push({"Key": "altitude" , "Value": f[7].split(" ")[1]});
+
+    return a;
 };
 
 var show_help = function () {
