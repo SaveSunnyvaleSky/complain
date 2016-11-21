@@ -147,7 +147,7 @@ var fr24_rule = {
 };
 
 var fr24_find_data = function (s, term) {
-    var re = fr24_rule[term]
+    var re = fr24_rule[term];
     var t = re.exec(s);
     if (t != null) {
         if (t[1] == "FLIGHT") {
@@ -211,6 +211,14 @@ var report_flight = function () {
     $("#flight-details").html(theCompiledHtml);
 };
 
+var find_webtrak_data = function(_text, _category) {
+    var m = new RegExp("(" + _category + ":.+)\n", "m");
+    var t = m.exec(_text);
+
+    return t[1].split(": ")[1];
+
+};
+
 var report_flight_webtrack = function(t) {
     /*
         Leaflet
@@ -223,6 +231,20 @@ var report_flight_webtrack = function(t) {
         Destination: SBP            6
         Altitude: 19,100 ft         7
         Tail Number: N770QS         9
+
+        >> a different format
+        Leaflet                     0
+        Nov 21 2016                 1
+        12:56:07 PM                 2
+        N518QS                      3
+        Flight Id: N518QS           4
+        Beacon: 1200                5
+        Aircraft Type: GLF5         6
+        Origin: LAX                 7
+        Destination: STS            8
+        Altitude: 27,900 ft         9
+        1xClick here to start replaying flights
+        12:56:07 PM
     */
 
     var l = t.split("Leaflet\n");
@@ -234,12 +256,17 @@ var report_flight_webtrack = function(t) {
     var f = l[1].split("\n");
     var a = [];
     a.push({"Key": "time"     , "Value": f[0] + " " + f[1]});
-    a.push({"Key": "flightno" , "Value": f[2]});
+    a.push({"Key": "flightno" ,
+            "Value": find_webtrak_data(t, "Flight Id")});
     a.push({"Key": "speed" , "Value": "?"});
-    a.push({"Key": "model"    , "Value": f[4].split(":")[1]});
-    a.push({"Key": "from"     , "Value": f[5].split(" ")[1]});
-    a.push({"Key": "to"       , "Value": f[6].split(" ")[1]});
-    a.push({"Key": "altitude" , "Value": f[7].split(" ")[1]});
+    a.push({"Key": "model"    ,
+            "Value": find_webtrak_data(t, "Aircraft Type")});
+    a.push({"Key": "from"     ,
+            "Value": find_webtrak_data(t, "Origin")});
+    a.push({"Key": "to"       ,
+            "Value": find_webtrak_data(t, "Destination")});
+    a.push({"Key": "altitude" ,
+            "Value": find_webtrak_data(t, "Altitude").split(" ")[0]});
 
     return a;
 };
@@ -274,7 +301,7 @@ var show_help = function () {
 
                 setTimeout(function() {
                     show_help();
-                    bootbox.alert("You must enter all the information and accept the term of service!<br>All information is stored locally"); 
+                    bootbox.alert("You must enter all the information and accept the term of service!<br>All information is stored locally");
                 }, 500);
             } else {
                 if ($("#name-input").val() == "" || $("#address-input").val() == "" || $("#city-input").val() == "" || $("#neighborhood-input").val() == "") {
