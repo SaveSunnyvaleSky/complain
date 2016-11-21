@@ -215,8 +215,10 @@ var find_webtrak_data = function(_text, _category) {
     var m = new RegExp("(" + _category + ":.+)\n", "m");
     var t = m.exec(_text);
 
-    return t[1].split(": ")[1];
-
+    if ( t ) {
+        return t[1].split(": ")[1];
+    }
+    return "?";
 };
 
 var report_flight_webtrack = function(t) {
