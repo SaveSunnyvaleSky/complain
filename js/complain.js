@@ -352,7 +352,7 @@ var email_faa = function (email, index, flight, airport) {
     var url = "";
     var target = "_blank"
     if (email == "gmail") {
-        url = "https://mail.google.com/mail/?view=cm&fs=1&to=9-awa-noiseombudsman@faa.gov,jwilson@sjc.org&su=[" +
+        url = "https://mail.google.com/mail/?view=cm&fs=1&to=9-awa-noiseombudsman@faa.gov&su=[" +
             airport + escape("] Airplane Noise Report from Sunnyvale (Flight No: " + flight + ")") + "&body=" + escape($("#email" + index).html());
 
         $("#gmail_link_" + index).removeClass("btn-primary");
