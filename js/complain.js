@@ -40,6 +40,11 @@ var parseLog = function (l) {
             a.Airport = a.FlightNo;
         }
 
+        a.NextGen = "";
+        if (a.Airport == "SFO" || a.Airport == "SJC" ) {
+            a.NextGen = "NextGen ";
+        }
+
         if (a.Speed.indexOf("kt") === -1) {
             a.Speed = a.Speed + " kts";
         }
@@ -108,7 +113,7 @@ var show_data_collector = function () {
                 if (v[v.length - 1] == "\n") l = "";
 
                 // Time (include Data as well)	City	Neighborhood	Flight No.	Model	From	To	Speed (kt)	Altitude (ft)	Comment on Noise Level
-                var fd = [$("#kv-time").val(), 
+                var fd = [$("#kv-time").val(),
                     $("#kv-flightno").val(),
                     $("#kv-model").val(),
                     $("#kv-from").val(),
@@ -353,13 +358,13 @@ var email_faa = function (email, index, flight, airport) {
     var target = "_blank"
     if (email == "gmail") {
         url = "https://mail.google.com/mail/?view=cm&fs=1&to=9-awa-noiseombudsman@faa.gov&su=[" +
-            airport + escape("] Airplane Noise Report from Sunnyvale (Flight No: " + flight + ")") + "&body=" + escape($("#email" + index).html());
+            airport + escape("] Flight Noise Complain from Sunnyvale (Flight No: " + flight + ")") + "&body=" + escape($("#email" + index).html());
 
         $("#gmail_link_" + index).removeClass("btn-primary");
         $("#gmail_link_" + index).addClass("btn-default");
     } else {
         url = "mailto:9-awa-noiseombudsman@faa.gov,jwilson@sjc.org?subject=[" +
-            airport + escape("] Airplane Noise Report from Sunnyvale (Flight No: " + flight + ")") + "&body=" + escape($("#email" + index).html());
+            airport + escape("] Flight Noise Complain from Sunnyvale (Flight No: " + flight + ")") + "&body=" + escape($("#email" + index).html());
         target = "_self";
         $("#email_link_" + index).removeClass("btn-primary");
         $("#email_link_" + index).addClass("btn-default");
@@ -390,6 +395,13 @@ var load = function () {
     }
 
     if (localStorage.template) {
+        // data migration
+        // migrate " NextGen " to " {{ NextGen }}"
+        if (localStorage.template.indexOf(" NextGen ") > -1 ) {
+            localStorage.template = localStorage.template.replace(" NextGen ", " {{NextGen}}");
+        }
+
+        // end of data migration
         $("#template").val(localStorage.template);
         if (localStorage.template == defaultTemplate && warnTemplateUpdate == false) {
             bootbox.alert("Please update and <b><u>save</u></b> template!<br>All information stored locally.<br>We encourage you to <b>adapt the message</b> to reflect your opinion.<br>Please do not change text within <b><i>{{...}}</i></b>");
