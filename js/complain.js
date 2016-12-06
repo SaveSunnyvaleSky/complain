@@ -345,6 +345,11 @@ var open_complaint_link = function (airport, index) {
         window.open("http://www.flysfo.com/community/noise-abatement/file-a-complaint", "_blank");
     } else if (airport == "KSQL" || airport == "SQL") {
         window.open("https://goo.gl/o7uYkF", "_blank");
+    } else if (airport == "PAO" || airport == "KPAO") {
+        var url = "mailto:pao@cityofpaloalto.org?subject=[" +
+            airport + escape("] Flight Noise Complaint from Sunnyvale") + "&body=" + escape($("#email" + index).html());
+        var target = "_self";
+        window.open(url, target);
     } else {
         bootbox.Alarm("Unknown Airport Code [" + airport + "], <br>Please file manually.");
     }
@@ -358,13 +363,13 @@ var email_faa = function (email, index, flight, airport) {
     var target = "_blank"
     if (email == "gmail") {
         url = "https://mail.google.com/mail/?view=cm&fs=1&to=9-awa-noiseombudsman@faa.gov&su=[" +
-            airport + escape("] Flight Noise Complain from Sunnyvale (Flight No: " + flight + ")") + "&body=" + escape($("#email" + index).html());
+            airport + escape("] Flight Noise Complaint from Sunnyvale (Flight No: " + flight + ")") + "&body=" + escape($("#email" + index).html());
 
         $("#gmail_link_" + index).removeClass("btn-primary");
         $("#gmail_link_" + index).addClass("btn-default");
     } else {
         url = "mailto:9-awa-noiseombudsman@faa.gov?subject=[" +
-            airport + escape("] Flight Noise Complain from Sunnyvale (Flight No: " + flight + ")") + "&body=" + escape($("#email" + index).html());
+            airport + escape("] Flight Noise Complaint from Sunnyvale (Flight No: " + flight + ")") + "&body=" + escape($("#email" + index).html());
         target = "_self";
         $("#email_link_" + index).removeClass("btn-primary");
         $("#email_link_" + index).addClass("btn-default");
