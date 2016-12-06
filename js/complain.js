@@ -363,7 +363,7 @@ var email_faa = function (email, index, flight, airport) {
         $("#gmail_link_" + index).removeClass("btn-primary");
         $("#gmail_link_" + index).addClass("btn-default");
     } else {
-        url = "mailto:9-awa-noiseombudsman@faa.gov,jwilson@sjc.org?subject=[" +
+        url = "mailto:9-awa-noiseombudsman@faa.gov?subject=[" +
             airport + escape("] Flight Noise Complain from Sunnyvale (Flight No: " + flight + ")") + "&body=" + escape($("#email" + index).html());
         target = "_self";
         $("#email_link_" + index).removeClass("btn-primary");
