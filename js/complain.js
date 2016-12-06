@@ -351,7 +351,7 @@ var open_complaint_link = function (airport, index) {
         var target = "_self";
         window.open(url, target);
     } else {
-        bootbox.Alarm("Unknown Airport Code [" + airport + "], <br>Please file manually.");
+        bootbox.alert("Unknown Airport Code [" + airport + "], <br>Please file manually.");
     }
     $("#complaint_link_" + index).removeClass("btn-primary");
     $("#complaint_link_" + index).addClass("btn-default");
