@@ -27,7 +27,7 @@ var parseLog = function (l) {
             City: r[9],
             Name: localStorage.Name,
             Address: localStorage.Address,
-            Neighborhood: r[10],
+            Neighborhood: localStorage.Neighborhood,
         };
         if (r[10] != "") {
             a.Comment = "Comment: " + r[8] + "\n";
