@@ -297,7 +297,7 @@ var show_help = function () {
             '<div class="col-sm-20"><input class="form-control-sm col-sm-4" id="neighborhood-input"> </input></div></div>' +
             '</form></div>' +
             '</li>' +
-            '<li>Update template text for you, you should update text to reflect your option. The default template is a generic template.</li>' +
+            '<li>Update template text for you, you should update text to reflect your opinion. The default template is a generic template.</li>' +
             '<li>Collect noisy flight in your location, and copy list of flights here. Please make sure no duplicate reports from different sites.</li>' +
             '</ol>' +
             '<br><strong>As user, you are solely reponsibile for the accuracy of the report. By clicking the Ok button you acknowledge you agree with this!</strong>' +
