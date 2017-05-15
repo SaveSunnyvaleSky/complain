@@ -13,6 +13,7 @@ var parseLog = function (l) {
     var re_excel = /^([^\t]+)\t([^\t]+)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]+)\t([^\t]*)\t([^\t]*)\t([^\t]*)/g
 
     var r = re_excel.exec(l);
+    console.log(r);
     if (r != null) {
         // this from google sheet or excel
         var a = {
@@ -140,10 +141,10 @@ var show_data_collector = function () {
 var fr24_rule = {
     "flightno_f": /Map view \(default\)\n[^\n]+\n([\w]+)/m,
     "flightno_m": /Toggle navigation\nUTC[^\n]+\nSearch\n[^\n]+\n([\w]+)/m,
-    "from": /FLIGHT STATUS[\s]*\n([\w]+)\n/m,
-    "to": /FLIGHT STATUS[\s]*\n[\w]+\n[^\n]+\n([\w]+)\n/m,
-    "model": /AIRCRAFT DETAILS[\s]*\nTYPE\(([\w]+)\)\n/m,
-    "speed": /FLIGHT DETAILS[\s]+\nGROUND SPEED[\s]*\n([\d]+) kts\n/m,
+    "from": /3D VIEW[\s]*\n([\w]+)\n/m,
+    "to": /^ACTUAL[\s]*\n[\w\:]+\n([\w]+)\n/m,
+    "model": /TYPE\(([\w]+)\)\n|TYPE\n([\w -]+)\n/m,
+    "speed": /GROUND SPEED[\s]*\n([\d]+) kts\n/m,
     "altitude": /CALIBRATED ALTITUDE[\s]*\n([\d,]+) ft\n/m,
     // "latitude": /LATITUDE[\s]*\n([\d\.-]+)[\s]*\n/m,
     // "longitude": /LONGITUDE[\s]*\n([\d\.-]+)[\s]*\n/m,
@@ -157,6 +158,8 @@ var fr24_find_data = function (s, term) {
     if (t != null) {
         if (t[1] == "FLIGHT") {
             return undefined;
+        } else if ( typeof t[1] == "undefined") {
+            return t[2]; // workaround for different format of model
         }
         return t[1];
     }
