@@ -141,6 +141,7 @@ var show_data_collector = function () {
 var fr24_rule = {
     "flightno_f": /Map view \(default\)\n[^\n]+\n([\w]+)/m,
     "flightno_m": /Toggle navigation\nUTC[^\n]+\nSearch\n[^\n]+\n([\w]+)/m,
+    "flightno_t": /([\w]+) - AVERAGE FLIGHT TIME: /m,  // HA45 - AVERAGE FLIGHT TIME: 05:16
     "from": /3D VIEW[\s]*\n([\w]+)\n/m,
     "to": /^ACTUAL[\s]*\n[\w\:]+\n([\w]+)\n/m,
     "model": /TYPE\(([\w]+)\)\n|TYPE\n([\w -]+)\n/m,
@@ -187,13 +188,15 @@ var report_flight = function () {
         for (var k in fr24_rule) {
             var v = fr24_find_data(info, k);
 
-            if ((k.indexOf("_m") > -1 || k.indexOf("_f") > -1) && typeof v !== "undefined") {
+            if (k.indexOf("flightno_") > -1 && typeof v !== "undefined") {
+                // update flight no
                 b.flightinfo.push({
                     "Key": k.slice(0, -2),
                     "Value": v
                 });
                 a[k.slice(0, -2)] = v;
             } else if (!(k.indexOf("_m") > -1 || k.indexOf("_f") > -1)) {
+                // for all other field
                 b.flightinfo.push({
                     "Key": k,
                     "Value": v
